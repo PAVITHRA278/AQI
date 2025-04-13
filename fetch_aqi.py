@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
 # fetch_aqi.py
 
-from turtle import st
+import streamlit as st
 import requests
 import pymongo
 from datetime import datetime
