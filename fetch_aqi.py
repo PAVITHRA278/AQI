@@ -65,7 +65,8 @@ import requests
 import pymongo
 from datetime import datetime
 import time
-
+import certifi
+from pymongo import MongoClient
 # MongoDB setup
 #client = pymongo.MongoClient("mongodb://localhost:27017/")
 #db = client["AirQualityDB"]
@@ -76,7 +77,7 @@ import time
 client = pymongo.MongoClient(
     st.secrets["MONGO"]["URI"],
     tls=True,              # Enforce TLS
-    tlsAllowInvalidCertificates=True  # if using self-signed certs or unverified env (optional)
+    tlsCAFile=certifi.where()  # if using self-signed certs or unverified env (optional)
 )
 db = client["AirQualityDB"]
 collection = db["real_time_aqi"]
