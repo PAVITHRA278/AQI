@@ -66,7 +66,13 @@ from datetime import datetime
 import time
 
 # MongoDB setup
-client = pymongo.MongoClient("mongodb://localhost:27017/")
+#client = pymongo.MongoClient("mongodb://localhost:27017/")
+#db = client["AirQualityDB"]
+#collection = db["real_time_aqi"]
+
+
+# Connect to MongoDB
+client = pymongo.MongoClient("mongodb+srv://mailmepavithras27:pavithra2708@cluster0.prwqm8h.mongodb.net/")
 db = client["AirQualityDB"]
 collection = db["real_time_aqi"]
 
