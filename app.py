@@ -15,7 +15,11 @@ from datetime import datetime, timedelta
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # Connect to MongoDB
-client = pymongo.MongoClient(st.secrets["MONGO"]["URI"])
+client = pymongo.MongoClient(
+    st.secrets["MONGO"]["URI"],
+    tls=True,              # Enforce TLS
+    tlsAllowInvalidCertificates=True  # if using self-signed certs or unverified env (optional)
+)
 db = client["AirQualityDB"]
 collection = db["real_time_aqi"]
 

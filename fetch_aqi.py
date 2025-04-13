@@ -73,7 +73,11 @@ import time
 
 
 # Connect to MongoDB
-client = pymongo.MongoClient(st.secrets["MONGO"]["URI"])
+client = pymongo.MongoClient(
+    st.secrets["MONGO"]["URI"],
+    tls=True,              # Enforce TLS
+    tlsAllowInvalidCertificates=True  # if using self-signed certs or unverified env (optional)
+)
 db = client["AirQualityDB"]
 collection = db["real_time_aqi"]
 
