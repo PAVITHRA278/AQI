@@ -66,15 +66,15 @@ from datetime import datetime
 import time
 
 # MongoDB setup
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-db = client["AirQualityDB"]
-collection = db["real_time_aqi"]
+#client = pymongo.MongoClient("mongodb://localhost:27017/")
+#db = client["AirQualityDB"]
+#collection = db["real_time_aqi"]
 
 
 # Connect to MongoDB
-#client = pymongo.MongoClient("mongodb+srv://mailmepavithras27:pavithra2708@cluster0.prwqm8h.mongodb.net/")
-#db = client["AirQualityDB"]
-#collection = db["real_time_aqi"]
+client = pymongo.MongoClient(st.secrets["MONGO"]["URI"])
+db = client["AirQualityDB"]
+collection = db["real_time_aqi"]
 
 API_TOKEN = "e5e3afafdb9a63b47110eebe74bce12c3eaf8dc6"
 

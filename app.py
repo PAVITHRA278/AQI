@@ -13,8 +13,8 @@ from datetime import datetime, timedelta
 # Suppress TensorFlow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-# MongoDB setup
-client = pymongo.MongoClient("mongodb://localhost:27017/")
+# Connect to MongoDB
+client = pymongo.MongoClient(st.secrets["MONGO"]["URI"])
 db = client["AirQualityDB"]
 collection = db["real_time_aqi"]
 
