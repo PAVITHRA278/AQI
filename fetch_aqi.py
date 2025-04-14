@@ -60,27 +60,21 @@ if __name__ == "__main__":
 
 # fetch_aqi.py
 
-import streamlit as st
 import requests
 import pymongo
 from datetime import datetime
 import time
-import certifi
-from pymongo import MongoClient
+
 # MongoDB setup
-#client = pymongo.MongoClient("mongodb://localhost:27017/")
-#db = client["AirQualityDB"]
-#collection = db["real_time_aqi"]
+client = pymongo.MongoClient("mongodb://localhost:27017/")
+db = client["AirQualityDB"]
+collection = db["real_time_aqi"]
 
 
 # Connect to MongoDB
-client = pymongo.MongoClient(
-    st.secrets["MONGO"]["URI"],
-    tls=True,              # Enforce TLS
-    tlsCAFile=certifi.where()  # if using self-signed certs or unverified env (optional)
-)
-db = client["AirQualityDB"]
-collection = db["real_time_aqi"]
+#client = pymongo.MongoClient("mongodb+srv://mailmepavithras27:pavithra2708@cluster0.prwqm8h.mongodb.net/")
+#db = client["AirQualityDB"]
+#collection = db["real_time_aqi"]
 
 API_TOKEN = "e5e3afafdb9a63b47110eebe74bce12c3eaf8dc6"
 

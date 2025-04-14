@@ -6,16 +6,9 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
-import certifi
-from pymongo import MongoClient
-import streamlit as st
 
 # Connect to MongoDB
-client = pymongo.MongoClient(
-    st.secrets["MONGO"]["URI"],
-    tls=True,              # Enforce TLS
-    tlsCAFile=certifi.where()  # if using self-signed certs or unverified env (optional)
-)
+client = pymongo.MongoClient("mongodb://localhost:27017/")
 db = client["AirQualityDB"]
 collection = db["real_time_aqi"]
 

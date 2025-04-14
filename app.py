@@ -9,19 +9,12 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 from datetime import datetime, timedelta
-import certifi
-from pymongo import MongoClient
-
 
 # Suppress TensorFlow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-# Connect to MongoDB
-client = pymongo.MongoClient(
-    st.secrets["MONGO"]["URI"],
-    tls=True,              # Enforce TLS
-    tlsCAFile=certifi.where()  # if using self-signed certs or unverified env (optional)
-)
+# MongoDB setup
+client = pymongo.MongoClient("mongodb://localhost:27017/")
 db = client["AirQualityDB"]
 collection = db["real_time_aqi"]
 
