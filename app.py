@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # MongoDB setup
-client = pymongo.MongoClient("mongodb://localhost:27017/")
+client = pymongo.MongoClient(st.secrets["Mongo"]["URI"])
 db = client["AirQualityDB"]
 collection = db["real_time_aqi"]
 
