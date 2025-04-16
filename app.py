@@ -32,7 +32,8 @@ def mse(y_true, y_pred):
 
 
 # Load Models
-lstm_model = load_model("lstm_model.h5", custom_objects={"mse": mse})
+lstm_model = load_model("lstm_model.h5")
+
 rf_model = joblib.load("random_forest_model.pkl")
 
 # Import fetch_aqi.py
