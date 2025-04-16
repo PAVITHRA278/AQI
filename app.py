@@ -10,11 +10,16 @@ from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 from datetime import datetime, timedelta
 
+from train_rf import train_rf
+from train_lstm import train_lstm
+
+
+
 # Suppress TensorFlow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-# MongoDB setup
-client = pymongo.MongoClient(st.secrets["Mongo"]["URI"])
+# Connect to MongoDB
+client = pymongo.MongoClient("mongodb+srv://mailmepavithras27:pavithra2708@cluster0.prwqm8h.mongodb.net/")
 db = client["AirQualityDB"]
 collection = db["real_time_aqi"]
 
@@ -23,6 +28,8 @@ import keras
 @keras.utils.register_keras_serializable()
 def mse(y_true, y_pred):
     return keras.losses.MeanSquaredError()(y_true, y_pred)
+
+
 
 # Load Models
 lstm_model = load_model("lstm_model.h5", custom_objects={"mse": mse})
@@ -86,7 +93,13 @@ else:
         with st.spinner("Fetching AQI data... Please wait."):
             try:
                 fetch_aqi.run_fetch_aqi()
-                st.success(" AQI data fetched and stored successfully!")
+                train_rf()
+                train_rf()
+                
+                st.success("✅ AQI data fetched successfully.")
+                
+                
+                
             except Exception as e:
                 st.error(f" Error fetching data: {e}")
     # **REAL-TIME AQI DISPLAY**
@@ -163,6 +176,7 @@ else:
         return df
 
     if st.button("Predict Future AQI"):
+       
         if city_name:
             predictions = predict_hybrid(city_name)
             if predictions is not None:

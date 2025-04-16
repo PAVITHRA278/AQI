@@ -66,15 +66,15 @@ from datetime import datetime
 import time
 
 # MongoDB setup
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-db = client["AirQualityDB"]
-collection = db["real_time_aqi"]
+#client = pymongo.MongoClient("mongodb://localhost:27017/")
+#db = client["AirQualityDB"]
+#collection = db["real_time_aqi"]
 
 
 # Connect to MongoDB
-#client = pymongo.MongoClient("mongodb+srv://mailmepavithras27:pavithra2708@cluster0.prwqm8h.mongodb.net/")
-#db = client["AirQualityDB"]
-#collection = db["real_time_aqi"]
+client = pymongo.MongoClient("mongodb+srv://mailmepavithras27:pavithra2708@cluster0.prwqm8h.mongodb.net/")
+db = client["AirQualityDB"]
+collection = db["real_time_aqi"]
 
 API_TOKEN = "e5e3afafdb9a63b47110eebe74bce12c3eaf8dc6"
 
@@ -92,6 +92,7 @@ CITIES = [
 def fetch_aqi(city):
     url = f"https://api.waqi.info/feed/{city}/?token={API_TOKEN}"
     response = requests.get(url).json()
+    
 
     if response["status"] == "ok":
         data = {
@@ -106,6 +107,8 @@ def fetch_aqi(city):
             "timestamp": datetime.now()
         }
         collection.insert_one(data)
+        
+
 
 def run_fetch_aqi():
     for i in range(0, len(CITIES), 5):
