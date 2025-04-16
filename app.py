@@ -32,7 +32,8 @@ def mse(y_true, y_pred):
 
 
 # Load Models
-lstm_model = load_model("lstm_model.h5")
+lstm_model = load_model("lstm_model.h5", compile=False)
+
 
 rf_model = joblib.load("random_forest_model.pkl")
 
