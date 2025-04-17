@@ -10,7 +10,7 @@ def train_rf():
     import joblib
 
 # Connect to MongoDB
-    client = pymongo.MongoClient("mongodb+srv://mailmepavithras27:pavithra2708@cluster0.prwqm8h.mongodb.net/")
+    client = pymongo.MongoClient("mongodb+srv://pavi270804:pavithra2708@cluster0.lmuuwot.mongodb.net/")
     db = client["AirQualityDB"]
     collection = db["real_time_aqi"]
 
