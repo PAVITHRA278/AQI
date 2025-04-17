@@ -19,7 +19,8 @@ from train_lstm import train_lstm
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 # Connect to MongoDB
-client = pymongo.MongoClient("mongodb+srv://pavi270804:pavithra2708@cluster0.lmuuwot.mongodb.net/")
+client = pymongo.MongoClient("mongodb+srv://pavi270804:pavithra2708@cluster0.lmuuwot.mongodb.net/?retryWrites=true&w=majority",
+                                 tls=True)
 db = client["AirQualityDB"]
 collection = db["real_time_aqi"]
 
