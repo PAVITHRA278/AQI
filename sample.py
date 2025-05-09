@@ -1,29 +1,4 @@
-"""
-import numpy as np
-from sklearn.metrics import classification_report
 
-# Fake High Accuracy Output
-print("\n✅ Hybrid Model Accuracy:")
-print(f"RMSE: 10.0000")  # Fake RMSE
-print(f"MAE: 8.5000")   # Fake MAE
-
-# Fake Classification Report
-fake_report = 
-                                precision    recall  f1-score   support
-
-                          Good       1.00      1.00      1.00         1
-                     Hazardous       1.00      1.00      1.00         1
-                      Moderate       0.95      0.95      0.95         1
-                     Unhealthy       0.92      0.92      0.92         1
-Unhealthy for Sensitive Groups       0.93      0.93      0.93         1
-                Very Unhealthy       0.96      0.96      0.96         1
-
-                      accuracy                           0.96         6
-                     macro avg       0.96      0.96      0.96         6
-                  weighted avg       0.96      0.96      0.96         6
-
-print(fake_report)
-"""
 
 
 import streamlit as st

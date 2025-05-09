@@ -8,10 +8,7 @@ def train_rf():
     from sklearn.model_selection import train_test_split
     from sklearn.preprocessing import MinMaxScaler
     import joblib
-
-# Connect to MongoDB
-    client = pymongo.MongoClient("mongodb+srv://pavi270804:pavithra2708@cluster0.lmuuwot.mongodb.net/?retryWrites=true&w=majority",
-                                 tls=True)
+    client = pymongo.MongoClient("mongodb://localhost:27017/")
     db = client["AirQualityDB"]
     collection = db["real_time_aqi"]
 
@@ -21,6 +18,8 @@ def train_rf():
     df["aqi"] = pd.to_numeric(df["aqi"], errors='coerce')
 # Drop rows with NaN AQI values
     df = df.dropna(subset=["aqi"])
+# ✅ <-- Add the outlier removal line RIGHT HERE
+    #df = df[df["aqi"] <= 500]
 # 🔹 Ensure Data Exists
     if df.empty or df.shape[0] < 10:
         raise ValueError("❌ Not enough AQI data available for training. At least 10 records required.")

@@ -25,3 +25,5 @@ if response["status"] == "ok":
     print("SO2:", response["data"]["iaqi"].get("so2", {}).get("v", "N/A"))
 else:
     print(f"❌ Error fetching data for {city}. Status: {response['status']}")
+import ssl
+print(ssl.OPENSSL_VERSION)

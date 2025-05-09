@@ -12,10 +12,10 @@ def train_lstm():
 
 # Connect to MongoDB
    # Connect to MongoDB
-    client = pymongo.MongoClient("mongodb+srv://pavi270804:pavithra2708@cluster0.lmuuwot.mongodb.net/?retryWrites=true&w=majority",
-                                 tls=True)
+    client = pymongo.MongoClient("mongodb://localhost:27017/")
     db = client["AirQualityDB"]
     collection = db["real_time_aqi"]
+    
 
 # Fetch AQI data from MongoDB
     data = list(collection.find({}, {"_id": 0, "city": 1, "timestamp": 1, "aqi": 1}))
@@ -34,6 +34,8 @@ def train_lstm():
 
 # Drop missing AQI values
     df = df.dropna(subset=["aqi"])
+# ✅ <-- Add the outlier removal line RIGHT HERE
+    #df = df[df["aqi"] <= 500]
 
 # Normalize AQI data
     scaler = MinMaxScaler(feature_range=(0, 1))

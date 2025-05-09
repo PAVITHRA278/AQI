@@ -13,14 +13,20 @@ from datetime import datetime, timedelta
 from train_rf import train_rf
 from train_lstm import train_lstm
 
+from fpdf import FPDF
+import tempfile
+import os
+import io
+
+from io import BytesIO
+
+
 
 
 # Suppress TensorFlow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-# Connect to MongoDB
-client = pymongo.MongoClient("mongodb+srv://pavi270804:pavithra2708@cluster0.lmuuwot.mongodb.net/?retryWrites=true&w=majority",
-                                 tls=True)
+client = pymongo.MongoClient("mongodb://localhost:27017/")
 db = client["AirQualityDB"]
 collection = db["real_time_aqi"]
 
@@ -38,6 +44,70 @@ lstm_model = load_model("lstm_model.h5", compile=False)
 
 rf_model = joblib.load("random_forest_model.pkl")
 
+
+
+# Use a checkbox for toggling dark mode
+dark_mode = st.checkbox("🌙 Dark Mode")
+
+if dark_mode:
+    # Apply dark mode CSS
+    st.markdown(
+        """
+        <style>
+        body {
+            background-color: black;
+            color: #ffffff;
+        }
+        .stButton>button {
+            background-color: #333333;
+            color: white;
+        }
+        .stApp {
+            background-color: black;
+        }
+        h1, h2, h3, h4, h5, h6, .stMarkdown {
+            color: #ffffff;  /* Ensures text is white in dark mode */
+        }
+        /* Target selectbox text color in dark mode */
+        .stSelectbox label {
+            color: #ffffff;  /* Ensure the label text is white */
+        }
+        
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
+
+else:
+    # Apply light mode CSS
+    st.markdown(
+        """
+        <style>
+        body {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        .stButton>button {
+            background-color: #f0f0f0;
+            color: black;
+        }
+        .stApp {
+            background-color: white;
+        }
+        h1, h2, h3, h4, h5, h6, .stMarkdown {
+            color: #000000;  /* Ensures text is black in light mode */
+        }
+        /* Target selectbox text color in light mode */
+        .stSelectbox label {
+            color: #000000;  /* Ensure the label text is black */
+        }
+        
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
 # Import fetch_aqi.py
 import fetch_aqi  # Ensure fetch_aqi.py is in the same directory and contains run_fetch_aqi()
 
@@ -57,8 +127,14 @@ if not st.session_state.logged_in:
         else:
             st.error("Invalid credentials. Please try again.")
 else:
+    
+    
+    
+    
+    
     # Streamlit UI
-    st.title("Smart Air Quality Prediction System")
+    st.title("Smart Air Quality Prediction")
+    
     st.markdown("**Real-Time & Predicted AQI Data**")
 
     city_name = st.selectbox("Select City", [
@@ -108,24 +184,59 @@ else:
     # **REAL-TIME AQI DISPLAY**
     if st.button("Real-time AQI"):
         if city_name:
-            latest_entry = get_latest_aqi(city_name)
+            with st.spinner("Fetching real-time AQI data..."):
+                latest_entry = get_latest_aqi(city_name)
             if latest_entry:
                 aqi_values = {
-                    "AQI": latest_entry.get("aqi", "N/A"),
-                    "PM2.5": latest_entry.get("pm25", "N/A"),
-                    "PM10": latest_entry.get("pm10", "N/A"),
-                    "NO2": latest_entry.get("no2", "N/A"),
-                    "CO": latest_entry.get("co", "N/A"),
-                    "O3": latest_entry.get("o3", "N/A"),
-                    "SO2": latest_entry.get("so2", "N/A"),
-                    "Date": latest_entry.get("timestamp", "N/A"),
-                }
-                st.table(pd.DataFrame([aqi_values]))
+                "AQI": latest_entry.get("aqi", "N/A"),
+                "PM2.5": latest_entry.get("pm25", "N/A"),
+                "PM10": latest_entry.get("pm10", "N/A"),
+                "NO2": latest_entry.get("no2", "N/A"),
+                "CO": latest_entry.get("co", "N/A"),
+                "O3": latest_entry.get("o3", "N/A"),
+                "SO2": latest_entry.get("so2", "N/A"),
+                "Date": latest_entry.get("timestamp", "N/A"),
+                
+            }
+                
+                # Show Station Location
+                station_name = latest_entry.get("station", "Unknown Station")
+                st.info(f"📍 AQI measured at: **{station_name}**")
+
+                
+
+                st.markdown("### 🌫️ Real-time AQI Data")
+                df = pd.DataFrame([aqi_values])
+                table_html = df.to_html(index=False)
+
+# Make the table scrollable on mobile using CSS
+                st.markdown(
+    f"""
+    <div style="overflow-x: auto; max-width: 100%;">
+        {table_html}
+    </div>
+    """,
+    unsafe_allow_html=True 
+)
+                aqi = latest_entry.get("aqi", None)
+            if aqi is not None:
+                st.markdown("###  Air Quality Alert")
+                if aqi <= 50:
+                    st.success("✅ Good air quality! Enjoy the fresh air.")
+                elif aqi <= 100:
+                    st.info("ℹ️ Moderate air quality. Safe for most people.")
+                elif aqi <= 200:
+                    st.warning("⚠️ Unhealthy for sensitive groups. Take precautions.")
+                elif aqi <= 300:
+                    st.error("🚨 Very unhealthy! Reduce outdoor activities.")
+                else:
+                    st.error("☠️ Hazardous air quality! Stay indoors and wear a mask.")
             else:
                 st.warning(f"No real-time AQI data found for {city_name}.")
         else:
             st.warning("Please enter a city name before fetching AQI data.")
 
+  
     def predict_lstm(past_aqi):
         scaler = MinMaxScaler(feature_range=(0, 1))
         past_aqi_scaled = scaler.fit_transform(past_aqi)
@@ -164,7 +275,7 @@ else:
 
         lstm_preds = predict_lstm(past_aqi)
         rf_preds = predict_rf(past_aqi)
-        hybrid_preds = 0.6 * lstm_preds + 0.4 * rf_preds
+        hybrid_preds = 0.5 * lstm_preds + 0.5 * rf_preds
 
         dates = [(datetime.now() + timedelta(days=i)).strftime('%Y-%m-%d') for i in range(1, 181)]
         df = pd.DataFrame({"Date": dates, "Hybrid": hybrid_preds})
@@ -181,15 +292,24 @@ else:
     if st.button("Predict Future AQI"):
        
         if city_name:
-            predictions = predict_hybrid(city_name)
-            if predictions is not None:
-                st.write("### Monthly Average AQI Predictions")
-                st.table(predictions)
-                st.session_state["df_pred"] = predictions
-            else:
-                st.warning("No data available for the entered city.")
+            with st.spinner("Generating AQI predictions..."):
+                predictions = predict_hybrid(city_name)
+                if predictions is not None:
+                    st.write("### Monthly Average AQI Predictions")
+                    st.table(predictions)
+                    st.session_state["df_pred"] = predictions
+                
+
+                
+                else:
+                    st.warning("No data available for the entered city.")
         else:
             st.warning("Please enter a city name before predicting AQI.")
+            
+            
+   
+
+    
 
     if "df_pred" in st.session_state and st.button("Show Graph"):
         df_pred = st.session_state["df_pred"]

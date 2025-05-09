@@ -66,16 +66,16 @@ from datetime import datetime
 import time
 
 # MongoDB setup
-#client = pymongo.MongoClient("mongodb://localhost:27017/")
-#db = client["AirQualityDB"]
-#collection = db["real_time_aqi"]
+client = pymongo.MongoClient("mongodb://localhost:27017/")
+db = client["AirQualityDB"]
+collection = db["real_time_aqi"]
 
 
 # Connect to MongoDB
-client = pymongo.MongoClient("mongodb+srv://pavi270804:pavithra2708@cluster0.lmuuwot.mongodb.net/?retryWrites=true&w=majority",
-                                 tls=True)
-db = client["AirQualityDB"]
-collection = db["real_time_aqi"]
+#client = pymongo.MongoClient("mongodb+srv://pavi270804:pavithra2708@cluster0.lmuuwot.mongodb.net/?retryWrites=true&w=majority",
+                                 #tls=True)
+#db = client["AirQualityDB"]
+#collection = db["real_time_aqi"]
 
 API_TOKEN = "e5e3afafdb9a63b47110eebe74bce12c3eaf8dc6"
 
@@ -105,7 +105,8 @@ def fetch_aqi(city):
             "co": response["data"]["iaqi"].get("co", {}).get("v"),
             "o3": response["data"]["iaqi"].get("o3", {}).get("v"),
             "so2": response["data"]["iaqi"].get("so2", {}).get("v"),
-            "timestamp": datetime.now()
+            "timestamp": datetime.now(),
+            "station": response["data"]["city"]["name"] 
         }
         collection.insert_one(data)
         
