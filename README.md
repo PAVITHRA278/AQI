@@ -1,4 +1,4 @@
-# 🌿 Air Quality Prediction System (Hybrid LSTM + Random Forest)
+#  Air Quality Prediction System (Hybrid LSTM + Random Forest)
 
 This project predicts Air Quality Index (AQI) levels using a **hybrid machine learning model** combining **Long Short-Term Memory (LSTM)** networks and **Random Forest (RF)** regressors. It leverages real-time AQI data fetched from the **AQICN API**, processes it, stores it in **MongoDB**, and trains predictive models for accurate future AQI forecasting and classification.
 
